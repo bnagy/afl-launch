@@ -33,7 +33,7 @@ Example:
 
 A note on the `-f` flag - the idea is that you pass a template like
 /dev/shm/whatever.xml and the launcher will substitute it as `-f
-/dev/shm/fuzzer-S12.xml` when it invokes afl-fuzz. This is so that you can
+/dev/shm/<BASENAME>-S12.xml` when it invokes afl-fuzz. This is so that you can
 have AFL create testcase files on a ramdisk, and avoid stressing your disks.
 Queue entries that exercise new paths are still saved as usual in the location
 specified by `-o`.
