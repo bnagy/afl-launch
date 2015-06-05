@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"os/exec"
+	"path"
 	"strconv"
 	"strings"
 )
@@ -22,6 +23,7 @@ var (
 	flagInput    = flag.String("i", "", "afl-fuzz -i option (input location)")
 	flagExtras   = flag.String("x", "", "afl-fuzz -x option (extras location)")
 	flagOutput   = flag.String("o", "", "afl-fuzz -o option (output location)")
+	flagFile     = flag.String("f", "", "Filename template (substituted and passed via -f)")
 )
 
 func randomName(n int) (result string) {
@@ -36,7 +38,18 @@ func randomName(n int) (result string) {
 	return
 }
 
-func spawn(args []string) {
+func spawn(fuzzerName string, args []string) {
+
+	// if the user wants to use a special location for the testfiles ( like a
+	// ramdisk ) then they can provide any filename /path/to/whatever.xxx and
+	// we'll sub out 'whatever' for the name of this fuzzer and keep the base
+	// and the extension.
+	if len(*flagFile) > 0 {
+		base, _ := path.Split(*flagFile)
+		ext := path.Ext(*flagFile)
+		args = append(args, "-f", path.Join(base, fuzzerName+ext))
+	}
+
 	args = append(args, "--")
 	args = append(args, flag.Args()...)
 	cmd := exec.Command(AFLNAME, args...)
@@ -90,15 +103,15 @@ func main() {
 	// first instance is a master unless indicated otherwise
 	if *flagNoMaster {
 		name := baseName + "-" + "S" + "0"
-		spawn(append(baseArgs, "-S", name))
+		spawn(name, append(baseArgs, "-S", name))
 	} else {
 		name := baseName + "-" + "M" + "0"
-		spawn(append(baseArgs, "-M", name))
+		spawn(name, append(baseArgs, "-M", name))
 	}
 
 	// launch the rest
 	for i := 1; i < *flagNum; i++ {
 		name := baseName + "-" + "S" + strconv.Itoa(i)
-		spawn(append(baseArgs, "-S", name))
+		spawn(name, append(baseArgs, "-S", name))
 	}
 }

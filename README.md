@@ -9,10 +9,11 @@ this tool.
 
 ```
 Usage of ./afl-launch:
+  -f="": Filename template (substituted and passed via -f)
   -i="": afl-fuzz -i option (input location)
   -m=-1: afl-fuzz -m option (memory limit)
   -n=1: Number of instances to launch
-  -name="": Base name for instances. Names will be <BASE>-[M|S]-<N>
+  -name="": Base name for instances. Names will be <output>/<BASE>-[M|S]<N>
   -no-master=false: Launch all instances with -S
   -o="": afl-fuzz -o option (output location)
   -t=-1: afl-fuzz -t option (timeout)
@@ -29,6 +30,13 @@ Example:
 ```
 ./afl-launch -i ~/testcases/pdf -o ~/fuzzing/pdf -n 4  -- pdftoppm @@
 ```
+
+A note on the `-f` flag - the idea is that you pass a template like
+/dev/shm/whatever.xml and the launcher will substitute it as `-f
+/dev/shm/fuzzer-S12.xml` when it invokes afl-fuzz. This is so that you can
+have AFL create testcase files on a ramdisk, and avoid stressing your disks.
+Queue entries that exercise new paths are still saved as usual in the location
+specified by `-o`.
 
 ## Installation
 
