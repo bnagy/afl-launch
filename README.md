@@ -38,6 +38,51 @@ have AFL create testcase files on a ramdisk, and avoid stressing your disks.
 Queue entries that exercise new paths are still saved as usual in the location
 specified by `-o`.
 
+### They launched.. now what?
+
+Use `afl-whatsup <LOCATION>` with the same location you used for -o to get the afl-fuzz summary output. For bonus points, be a unix nerd and do like `watch -t -n 60 afl-whatsup ~/fuzzing/targetname`
+
+This is what it will look like right at the start:
+```
+status check tool for afl-fuzz by <lcamtuf@google.com>
+
+Individual fuzzers
+==================
+
+>>> qwyaq-M0 (0 days, 0 hrs) <<<
+
+  cycle 1, lifetime speed 0 execs/sec, path 0/1 (0%)
+  pending 1/1, coverage 3.36%, no crashes yet
+
+>>> qwyaq-S1 (0 days, 0 hrs) <<<
+
+  cycle 1, lifetime speed 0 execs/sec, path 0/1 (0%)
+  pending 1/1, coverage 3.36%, no crashes yet
+
+>>> qwyaq-S2 (0 days, 0 hrs) <<<
+
+  cycle 1, lifetime speed 0 execs/sec, path 0/1 (0%)
+  pending 1/1, coverage 3.36%, no crashes yet
+
+>>> qwyaq-S3 (0 days, 0 hrs) <<<
+
+  cycle 1, lifetime speed 0 execs/sec, path 0/1 (0%)
+  pending 1/1, coverage 3.36%, no crashes yet
+
+
+Summary stats
+=============
+
+       Fuzzers alive : 4
+      Dead or remote : 37 (excluded from stats)
+      Total run time : 0 days, 0 hours
+         Total execs : 0 million
+    Cumulative speed : 0 execs/sec
+       Pending paths : 4 faves, 4 total
+  Pending per fuzzer : 1 faves, 1 total (on average)
+       Crashes found : 0 locally unique
+```
+
 ## Installation
 
 You should follow the [instructions](https://golang.org/doc/install) to
