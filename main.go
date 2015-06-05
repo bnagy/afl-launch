@@ -17,7 +17,7 @@ const AFLNAME = "afl-fuzz"
 var (
 	flagNoMaster = flag.Bool("no-master", false, "Launch all instances with -S")
 	flagNum      = flag.Int("n", 1, "Number of instances to launch")
-	flagName     = flag.String("name", "", "Base name for instances. Names will be <output>/<BASE>-[M|S]<N>")
+	flagName     = flag.String("name", "", "Base name for instances. Fuzzers will work in <output>/<BASE>-[M|S]<N>")
 	flagTimeout  = flag.Int("t", -1, "afl-fuzz -t option (timeout)")
 	flagMem      = flag.Int("m", -1, "afl-fuzz -m option (memory limit)")
 	flagInput    = flag.String("i", "", "afl-fuzz -i option (input location)")

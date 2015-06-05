@@ -13,7 +13,7 @@ Usage of ./afl-launch:
   -i="": afl-fuzz -i option (input location)
   -m=-1: afl-fuzz -m option (memory limit)
   -n=1: Number of instances to launch
-  -name="": Base name for instances. Names will be <output>/<BASE>-[M|S]<N>
+  -name="": Base name for instances. Fuzzers will work in <output>/<BASE>-[M|S]<N>
   -no-master=false: Launch all instances with -S
   -o="": afl-fuzz -o option (output location)
   -t=-1: afl-fuzz -t option (timeout)
