@@ -21,7 +21,7 @@ Usage of ./afl-launch:
 ```
 
 The launcher DOES NOT CHECK if the `afl-fuzz` instance errored out. Before
-starting a multiple launch, you should start afl-fuzz once manually with your
+starting a multiple launch, you should start `afl-fuzz` once manually with your
 desired `-i` `-o` `-x` (etc) options to make sure everything works.
 
 If you don't supply a base name, the launcher will pick a random one.
