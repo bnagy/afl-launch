@@ -46,7 +46,7 @@ best way is just to run it inside a `screen` session (`man screen`).
 
 Use `afl-whatsup <LOCATION>` with the same location you used for -o to get the
 afl-fuzz summary output. For bonus points, be a unix nerd and do like `watch
--t -n 60 "afl-whatsup ~/fuzzing/targetname | tail -n 11"`
+-n 60 "afl-whatsup ~/fuzzing/targetname | tail -n 11"`
 
 This is what that looks like:
 ```
