@@ -32,15 +32,15 @@ Example:
 ```
 
 A note on the `-f` flag - the idea is that you pass a template like
-/dev/shm/whatever.xml and the launcher will substitute it as `-f
-/dev/shm/<BASENAME>-S12.xml` when it invokes afl-fuzz. This is so that you can
+`/dev/shm/whatever.xml` and the launcher will substitute it as `-f
+/dev/shm/<BASENAME>-S12.xml` when it invokes `afl-fuzz`. This is so that you can
 have AFL create testcase files on a ramdisk, and avoid stressing your disks.
 Queue entries and crashes are still saved as usual in the location specified
 by `-o`. Don't be an idiot like me and run everything on a ramdisk.
 
 Another note about ttys - this tool just spawns all the processes and then
 exits. If you want them to stay running unattended then the easiest and (IMHO)
-best way is just to run it inside a screen session.
+best way is just to run it inside a `screen` session (`man screen`).
 
 ### They launched.. now what?
 
