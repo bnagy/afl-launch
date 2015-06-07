@@ -20,9 +20,9 @@ Usage of ./afl-launch:
   -x="": afl-fuzz -x option (extras location)
 ```
 
-The launcher DOES NOT CHECK if the `afl-fuzz` instance errored out. You should
-start afl-fuzz manually with your desired `-i` `-o` `-x` (etc) options to make
-sure everything works.
+The launcher DOES NOT CHECK if the `afl-fuzz` instance errored out. Before
+starting a multiple launch, you should start afl-fuzz once manually with your
+desired `-i` `-o` `-x` (etc) options to make sure everything works.
 
 If you don't supply a base name, the launcher will pick a random one.
 
@@ -35,52 +35,33 @@ A note on the `-f` flag - the idea is that you pass a template like
 /dev/shm/whatever.xml and the launcher will substitute it as `-f
 /dev/shm/<BASENAME>-S12.xml` when it invokes afl-fuzz. This is so that you can
 have AFL create testcase files on a ramdisk, and avoid stressing your disks.
-Queue entries that exercise new paths are still saved as usual in the location
-specified by `-o`.
+Queue entries and crashes are still saved as usual in the location specified
+by `-o`. Don't be an idiot like me and run everything on a ramdisk.
+
+Another note about ttys - this tool just spawns all the processes and then
+exits. If you want them to stay running unattended then the easiest and (IMHO)
+best way is just to run it inside a screen session.
 
 ### They launched.. now what?
 
-Use `afl-whatsup <LOCATION>` with the same location you used for -o to get the afl-fuzz summary output. For bonus points, be a unix nerd and do like `watch -t -n 60 afl-whatsup ~/fuzzing/targetname`
+Use `afl-whatsup <LOCATION>` with the same location you used for -o to get the
+afl-fuzz summary output. For bonus points, be a unix nerd and do like `watch
+-t -n 60 "afl-whatsup ~/fuzzing/targetname | tail -n 11"`
 
-This is what it will look like right at the start:
+This is what that looks like:
 ```
-status check tool for afl-fuzz by <lcamtuf@google.com>
-
-Individual fuzzers
-==================
-
->>> qwyaq-M0 (0 days, 0 hrs) <<<
-
-  cycle 1, lifetime speed 0 execs/sec, path 0/1 (0%)
-  pending 1/1, coverage 3.36%, no crashes yet
-
->>> qwyaq-S1 (0 days, 0 hrs) <<<
-
-  cycle 1, lifetime speed 0 execs/sec, path 0/1 (0%)
-  pending 1/1, coverage 3.36%, no crashes yet
-
->>> qwyaq-S2 (0 days, 0 hrs) <<<
-
-  cycle 1, lifetime speed 0 execs/sec, path 0/1 (0%)
-  pending 1/1, coverage 3.36%, no crashes yet
-
->>> qwyaq-S3 (0 days, 0 hrs) <<<
-
-  cycle 1, lifetime speed 0 execs/sec, path 0/1 (0%)
-  pending 1/1, coverage 3.36%, no crashes yet
-
+Every 60.0s: afl-whatsup ~/fuzzing/targetname | tail -n 11     Sun Jun  7 10:40:36 2015
 
 Summary stats
 =============
 
-       Fuzzers alive : 4
-      Dead or remote : 37 (excluded from stats)
-      Total run time : 0 days, 0 hours
-         Total execs : 0 million
-    Cumulative speed : 0 execs/sec
-       Pending paths : 4 faves, 4 total
-  Pending per fuzzer : 1 faves, 1 total (on average)
-       Crashes found : 0 locally unique
+       Fuzzers alive : 48
+      Total run time : 71 days, 9 hours
+         Total execs : 641 million
+    Cumulative speed : 4993 execs/sec
+       Pending paths : 250 faves, 133096 total
+  Pending per fuzzer : 5 faves, 2772 total (on average)
+       Crashes found : 5597 locally unique
 ```
 
 ## Installation
@@ -95,11 +76,12 @@ $ go get -u github.com/bnagy/afl-launch
 
 ## TODO
 
+Nothing on the list. Open an issue if you want something.
+
 ## Contributing
 
-Fork and send a pull request.
-
-Report issues.
+* Fork and send a pull request
+* Report issues
 
 ## License & Acknowledgements
 
