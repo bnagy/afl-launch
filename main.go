@@ -51,9 +51,9 @@ func spawn(fuzzerName string, args []string) {
 		args = append(args, "-f", path.Join(base, fuzzerName+ext))
 	}
 
-	// Create a logfile for afl's stderr. Truncates any existing logfile.
+	// Create a logfile for afl's stdout. Truncates any existing logfile.
 	fuzzerDir := path.Join(*flagOutput, fuzzerName)
-	fd, err := os.Create(path.Join(fuzzerDir, "afl-launch.errlog"))
+	fd, err := os.Create(path.Join(fuzzerDir, "afl-launch.log"))
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
@@ -62,7 +62,7 @@ func spawn(fuzzerName string, args []string) {
 	args = append(args, "--")
 	args = append(args, flag.Args()...)
 	cmd := exec.Command(AFLNAME, args...)
-	cmd.Stderr = fd
+	cmd.Stdout = fd
 	err = cmd.Start()
 	if err != nil {
 		// If this fails to start it will be OS issues like no swap or rlimit
