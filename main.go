@@ -5,6 +5,7 @@ import (
 	"flag"
 	"io"
 	"log"
+	"os"
 	"os/exec"
 	"path"
 	"strconv"
@@ -18,9 +19,9 @@ var (
 	flagNoMaster = flag.Bool("no-master", false, "Launch all instances with -S")
 	flagNum      = flag.Int("n", 1, "Number of instances to launch")
 	flagName     = flag.String("name", "", "Base name for instances. Fuzzers will work in <output>/<BASE>-[M|S]<N>")
-	flagTimeout  = flag.String("t", "", "afl-fuzz -t option (timeout)")
+	flagTimeout  = flag.String("t", "", "afl-fuzz -t option (timeout)") // afl -t option supports a + suffix
 	flagMem      = flag.Int("m", -1, "afl-fuzz -m option (memory limit)")
-	flagInput    = flag.String("i", "", "afl-fuzz -i option (input location)")
+	flagInput    = flag.String("i", "-", "afl-fuzz -i option (input location)")
 	flagExtras   = flag.String("x", "", "afl-fuzz -x option (extras location)")
 	flagOutput   = flag.String("o", "", "afl-fuzz -o option (output location)")
 	flagFile     = flag.String("f", "", "Filename template (substituted and passed via -f)")
@@ -50,10 +51,19 @@ func spawn(fuzzerName string, args []string) {
 		args = append(args, "-f", path.Join(base, fuzzerName+ext))
 	}
 
+	// Create a logfile for afl's stderr. Truncates any existing logfile.
+	fuzzerDir := path.Join(*flagOutput, fuzzerName)
+	fd, err := os.Create(path.Join(fuzzerDir, "afl-launch.errlog"))
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+	defer fd.Close()
+
 	args = append(args, "--")
 	args = append(args, flag.Args()...)
 	cmd := exec.Command(AFLNAME, args...)
-	err := cmd.Start()
+	cmd.Stderr = fd
+	err = cmd.Start()
 	if err != nil {
 		// If this fails to start it will be OS issues like no swap or rlimit
 		// or something, so it's not something we can handle gracefully. It's
