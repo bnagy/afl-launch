@@ -21,7 +21,7 @@ var (
 	flagName     = flag.String("name", "", "Base name for instances. Fuzzers will work in <output>/<BASE>-[M|S]<N>")
 	flagTimeout  = flag.String("t", "", "afl-fuzz -t option (timeout)") // afl -t option supports a + suffix
 	flagMem      = flag.Int("m", -1, "afl-fuzz -m option (memory limit)")
-	flagInput    = flag.String("i", "-", "afl-fuzz -i option (input location)")
+	flagInput    = flag.String("i", "", "afl-fuzz -i option (input location)")
 	flagExtras   = flag.String("x", "", "afl-fuzz -x option (extras location)")
 	flagOutput   = flag.String("o", "", "afl-fuzz -o option (output location)")
 	flagFile     = flag.String("f", "", "Filename template (substituted and passed via -f)")
