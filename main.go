@@ -53,6 +53,10 @@ func spawn(fuzzerName string, args []string) {
 
 	// Create a logfile for afl's stdout. Truncates any existing logfile.
 	fuzzerDir := path.Join(*flagOutput, fuzzerName)
+	err := os.MkdirAll(fuzzerDir, 0666)
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
 	fd, err := os.Create(path.Join(fuzzerDir, "afl-launch.log"))
 	if err != nil {
 		log.Fatalf(err.Error())
