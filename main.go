@@ -68,7 +68,8 @@ func spawn(fuzzerName string, args []string) {
 	defer fd.Close()
 
 	args = append(args, "--")
-	progArgs := flag.Args()[:]
+	progArgs := []string{}
+	copy(progArgs, flag.Args()[:])
 	if *flagXXX {
 		for i, elem := range progArgs {
 			if subRegex.MatchString(elem) {
