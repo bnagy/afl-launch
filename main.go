@@ -68,16 +68,18 @@ func spawn(fuzzerName string, args []string) {
 	defer fd.Close()
 
 	args = append(args, "--")
-	progArgs := []string{}
-	copy(progArgs, flag.Args()[:])
 	if *flagXXX {
+		progArgs := make([]string, len(flag.Args()))
+		copy(progArgs, flag.Args())
 		for i, elem := range progArgs {
 			if subRegex.MatchString(elem) {
 				progArgs[i] = subRegex.ReplaceAllString(elem, randomName(8))
 			}
 		}
+		args = append(args, progArgs...)
+	} else {
+		args = append(args, flag.Args()...)
 	}
-	args = append(args, progArgs...)
 
 	cmd := exec.Command(AFLNAME, args...)
 	cmd.Stdout = fd
