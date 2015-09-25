@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -25,6 +26,9 @@ var (
 	flagExtras   = flag.String("x", "", "afl-fuzz -x option (extras location)")
 	flagOutput   = flag.String("o", "", "afl-fuzz -o option (output location)")
 	flagFile     = flag.String("f", "", "Filename template (substituted and passed via -f)")
+	flagXXX      = flag.Bool("XXX", false, "[HACK] substitute XXX in the target args with an 8 char random string [HACK]")
+
+	subRegex = regexp.MustCompile("XXX")
 )
 
 func randomName(n int) (result string) {
@@ -64,7 +68,16 @@ func spawn(fuzzerName string, args []string) {
 	defer fd.Close()
 
 	args = append(args, "--")
-	args = append(args, flag.Args()...)
+	progArgs := flag.Args()[:]
+	if *flagXXX {
+		for i, elem := range progArgs {
+			if subRegex.MatchString(elem) {
+				progArgs[i] = subRegex.ReplaceAllString(elem, randomName(8))
+			}
+		}
+	}
+	args = append(args, progArgs...)
+
 	cmd := exec.Command(AFLNAME, args...)
 	cmd.Stdout = fd
 	err = cmd.Start()
