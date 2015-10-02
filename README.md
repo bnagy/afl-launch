@@ -8,16 +8,27 @@ command line. It provides no compelling features; it is simply my version of
 this tool.
 
 ```
-Usage of ./afl-launch:
-  -f="": Filename template (substituted and passed via -f)
-  -i="": afl-fuzz -i option (input location)
-  -m=-1: afl-fuzz -m option (memory limit)
-  -n=1: Number of instances to launch
-  -name="": Base name for instances. Fuzzers will work in <output>/<BASE>-[M|S]<N>
-  -no-master=false: Launch all instances with -S
-  -o="": afl-fuzz -o option (output location)
-  -t=-1: afl-fuzz -t option (timeout)
-  -x="": afl-fuzz -x option (extras location)
+Usage of afl-launch:
+  -XXX
+        [HACK] substitute XXX in the target args with an 8 char random string [HACK]
+  -f string
+        Filename template (substituted and passed via -f)
+  -i string
+        afl-fuzz -i option (input location)
+  -m int
+        afl-fuzz -m option (memory limit) (default -1)
+  -n int
+        Number of instances to launch (default 1)
+  -name string
+        Base name for instances. Fuzzers will work in <output>/<BASE>-[M|S]<N>
+  -no-master
+        Launch all instances with -S
+  -o string
+        afl-fuzz -o option (output location)
+  -t string
+        afl-fuzz -t option (timeout)
+  -x string
+        afl-fuzz -x option (extras location)
 ```
 
 The launcher DOES NOT CHECK if the `afl-fuzz` instance errored out. Before
@@ -42,26 +53,36 @@ Another note about ttys - this tool just spawns all the processes and then
 exits. If you want them to stay running unattended then the easiest and (IMHO)
 best way is just to run it inside a `screen` session (`man screen`).
 
+### -XXX
+
+There is a hacky option that can be used for a few things. If you pass -XXX
+then the literal string `XXX` anywhere in the target command (after the `--`
+in the command line) will be replaced with a random 8 character string. I use
+this for targets that require a `-o` flag for output filename, like
+`stupidprogram -i @@ -out /dev/shm/XXX.jpg`.
+
 ### They launched.. now what?
 
 Use `afl-whatsup <LOCATION>` with the same location you used for -o to get the
 afl-fuzz summary output. For bonus points, be a unix nerd and do like `watch
--n 60 "afl-whatsup ~/fuzzing/targetname | tail -n 11"`
+-n 60 afl-whatsup -s ~/fuzzing/targetname`
 
 This is what that looks like:
 ```
-Every 60.0s: afl-whatsup ~/fuzzing/targetname | tail -n 11     Sun Jun  7 10:40:36 2015
+Every 60.0s: afl-whatsup -s ~/fuzzing/targetname Sun Jun  7 10:40:36 2015
+
+status check tool for afl-fuzz by <lcamtuf@google.com>
 
 Summary stats
 =============
 
-       Fuzzers alive : 48
-      Total run time : 71 days, 9 hours
-         Total execs : 641 million
-    Cumulative speed : 4993 execs/sec
-       Pending paths : 250 faves, 133096 total
-  Pending per fuzzer : 5 faves, 2772 total (on average)
-       Crashes found : 5597 locally unique
+       Fuzzers alive : 40
+      Total run time : 161 days, 22 hours
+         Total execs : 4513 million
+    Cumulative speed : 12904 execs/sec
+       Pending paths : 75 faves, 29250 total
+  Pending per fuzzer : 1 faves, 731 total (on average)
+       Crashes found : 9806 locally unique
 ```
 
 ## Installation
