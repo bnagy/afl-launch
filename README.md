@@ -15,8 +15,8 @@ Usage of afl-launch:
         Filename template (substituted and passed via -f)
   -i string
         afl-fuzz -i option (input location)
-  -m int
-        afl-fuzz -m option (memory limit) (default -1)
+  -m string
+        afl-fuzz -m option (memory limit), 'none' for no limit (defaults to afl)
   -n int
         Number of instances to launch (default 1)
   -name string
