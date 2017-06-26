@@ -11,6 +11,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const MAXFUZZERS = 256
@@ -84,6 +85,7 @@ func spawn(fuzzerName string, args []string) {
 	cmd := exec.Command(AFLNAME, args...)
 	cmd.Stdout = fd
 	err = cmd.Start()
+	time.Sleep(2 * time.Second)
 	if err != nil {
 		// If this fails to start it will be OS issues like no swap or rlimit
 		// or something, so it's not something we can handle gracefully. It's
