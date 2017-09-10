@@ -11,6 +11,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const MAXFUZZERS = 256
@@ -141,6 +142,8 @@ func main() {
 
 	// launch the rest
 	for i := 1; i < *flagNum; i++ {
+		// To avoid multiple AFL instances binding to the same CPU, we wait a bit
+		time.Sleep(250 * time.Millisecond)
 		name := baseName + "-" + "S" + strconv.Itoa(i)
 		spawn(name, append(baseArgs, "-S", name))
 	}
